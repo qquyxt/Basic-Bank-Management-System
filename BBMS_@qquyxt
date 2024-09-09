@@ -1,0 +1,293 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Net.NetworkInformation;
+using System.Security.Principal;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace QQUYXT /*PROGRAMMED BY QQUYXT - GITHUB : @QQUYXT*/
+{
+    internal class Program
+    {
+        static long[] accountNumbers = new long[5]; /*MONITORS NUMBER OF ACCOUNTS CREATED - LIMITS TO 5*/
+        static decimal[] accountBalances = new decimal[5]; /*MUST BE IDENTICAL WITH YOUR ACCOUNT ARRAY*/
+        static int accountCount = 0; /*COUNTS THE NUMBER OF ACCOUNTS CREATED*/
+
+        static void Main(string[] args)
+        {
+
+        /*THIS IS THE MENU TAB DESIGNED BY : @QQUYXT*/
+        menuTab:
+
+            Console.Write(@"
+|==========================|
+|      OUR MONEY BANK      |
+|==========================|
+|     :: MAIN MENU ::      |      
+|1. Create New Account     |
+|2. Deposit Amount         |
+|3. Withdraw Amount        |
+|4. Balance Inquiry        |
+|5. Exit                   |   
+|==========================|");
+            Console.WriteLine("\n"); /*THIS CREATES A NEW LINE - MAKES A ONE LINE SPACE BETWEEN SENTENCES*/
+            Console.Write("\nPlease Enter Your Selection: "); /*USER INPUT*/
+            string user_choice = Console.ReadLine(); /*READS USER INPUT*/
+            int.TryParse(user_choice, out int choice); /*CONVERTS STRING TO 64-BIT INTEGER*/
+
+            switch (choice) /*THIS IS THE SELECTION CONTROL MECHANISH - CASE STATMENTS ARE NESTED WITH IF ELSE STATEMENTS*/
+            {
+                case 1: /*SELECTION 1*/
+                    Console.WriteLine("\n");
+                    Console.Write(@"
+=======================================
+        -- CREATE AN ACCOUNT --       
+=======================================");
+                    if (accountCount < 5) /*CHECKS IF ACCOUNT CREATED HAS EXCEEDED LIMIT OF 5*/
+                    {   
+                        Console.Write("\nEnter Account Number (Max. 12 Digits): "); /*USER INPUT*/
+                        string accn1 = Console.ReadLine(); /*READS USER INPUT*/
+                        long acc_number1; /*LONG MEANS 64-BIT INTEGER*/
+
+                        if (!long.TryParse(accn1, out acc_number1)) /*IF STATEMENT THAT CONVERTS STRING TO LONG INTEGER - ALSO CHANGES ITS VARIABLE NAME*/
+                        {
+                            Console.WriteLine("\n");
+                            Console.Write(@"
+=======================================
+         -- INVALID INPUT --                    
+======================================="); 
+                            Console.WriteLine("\nERROR! Account number must be numeric."); /*PROMPTS THE USER OF AN INVALID INPUT*/
+                        }
+                        else if (accn1.Length != 12) /*VALIDATES THE LENGTH OF THE ACCOUNT NUMBER - BASED ON USER INPUT*/
+                        {
+                            Console.WriteLine("\n");
+                            Console.Write(@"
+=======================================
+         -- INVALID INPUT --        
+=======================================");
+                            Console.WriteLine("\nERROR! Account number must be exactly 12 digits."); /*PROMPTS THE USER OF AN INVALID INPUT*/
+                        }
+                        else
+                        {
+                            accountNumbers[accountCount] = acc_number1; 
+                            accountBalances[accountCount] = 0;
+                            accountCount++; /*CHECKS FOR ACCOUNT COUNT - ADDS 1 FOR EVERY ACCOUNT CREATED*/
+
+                            Console.WriteLine("\n");
+                            Console.Write(@"
+=======================================
+        -- CONGRATULATIONS --        
+=======================================");
+                            Console.WriteLine("\nYou have created a new account! Amazing!"); /*PROMPTS THE USER FOR SUCCESSFULLY CREATING A NEW ACCOUNT AFTER PASSING VALIDATION*/
+                            Console.WriteLine("\nBalance: 0"); /*ALL NEW ACCOUNTS STARTS WITH 0 BALANCE*/
+                            Console.WriteLine("Account Number: " + acc_number1); /*ADDS 1 FOR EVERY ACCOUNT CREATED*/
+                            Console.WriteLine("\n");
+                        }
+                    }
+                    else
+                    {
+                        Console.WriteLine("\n");
+                        Console.Write(@"
+=======================================
+       -- TOO MANY ACCOUNTS --       
+=======================================");
+                        Console.WriteLine("\nERROR! Maximum account limit reached."); /*PROMPTS THE USER IF ACCOUNT CREATION HAS EXCEEDED LIMIT OF 5*/
+                    }
+                    goto menuTab;
+                    
+                case 2: /*SELECTION 2*/
+                    Console.WriteLine("\n");
+                    Console.Write(@"
+=======================================
+            -- DEPOSIT --    
+=======================================");
+                    Console.Write("\nEnter Your Account Number: "); /*USER INPUT FOR VALIDATION*/
+                    string accn2 = Console.ReadLine(); /*READS USER INPUT*/
+                    long.TryParse(accn2, out long acc_number2); /*CONVERTS TO 64-BIT INTEGER*/
+                    int deposit = -1; /*CHECKS THE ARRAY IF ACCOUNT NUMBER EXISTS IN THE ARRAY*/
+
+                    for (int i = 0; i < accountCount; i++) /*IF THE ACCOUNT NUMBER EXISTS - THEN THIS IS TRUE AND THIS WILL NOT BE IGNORED*/
+                    {
+                        if (accountNumbers[i] == acc_number2)
+                        {
+                            deposit = i;
+                            break;
+                        }
+                    }
+
+                    if (deposit != -1) /*THIS ASKS USER FOR AN AMOUNT - ADDING THE AMOUNT TO THE ARRAY UNDER THE ACCOUNT NUMBER REGISTERED*/
+                    {
+                        Console.Write("\nEnter Amount To Deposit: ");
+                        string user_deposit = Console.ReadLine();
+                        decimal.TryParse(user_deposit, out decimal userDeposit);
+                        if (userDeposit > 0)
+                        {
+                            accountBalances[deposit] += userDeposit;
+                            Console.WriteLine("\n");
+                            Console.Write(@"
+=======================================
+       -- DEPOSIT SUCCESSFUL --        
+=======================================");
+                            Console.WriteLine("\nYour new balance is: " + accountBalances[deposit]); /*AFTER ADDING AN AMOUNT BALANCE WILL AUTOMATICALLY SHOW*/
+                        }
+                        else
+                        {
+                            Console.WriteLine("\n");
+                            Console.Write(@"
+=======================================
+      -- DEPOSIT UNSUCCESSFUL --        
+=======================================");
+                            Console.WriteLine("\nERROR! Invalid deposit amount."); /*PROMPTS USER FOR INVALID INPUT*/
+                        }
+                    }
+                    else
+                    {
+                        Console.WriteLine("\n");
+                        Console.Write(@"
+=======================================
+      -- DEPOSIT UNSUCCESSFUL --        
+=======================================");
+                        Console.WriteLine("\nERROR! Account not found."); /*PROMPTS USER IS VALIDATION FAILS*/
+                    }
+                    goto menuTab;
+
+                case 3: /*SELECTION 3*/
+                    Console.WriteLine("\n");
+                    Console.Write(@"
+=======================================
+            -- WITHDRAW --    
+=======================================");
+                    Console.Write("\nEnter Your Account Number: ");
+                    string accn = Console.ReadLine();
+                    if (!long.TryParse(accn, out long acc_number))
+                    {
+                        Console.WriteLine("\nERROR! Invalid account number format."); 
+                        break;
+                    }
+                    int withdraw = -1;
+                    for (int i = 0; i < accountCount; i++) /*THE PROCESS IS THE SAME WITH DEPOSIT, HOWEVER, THIS DEDUCTS AMOUNT FROM YOUR BALANCE AND ENSURES TO UPDATE YOUR ARRAY*/
+                    {
+                        if (accountNumbers[i] == acc_number)
+                        {
+                            withdraw = i;
+                            break;
+                        }
+                    }
+                    if (withdraw != -1)
+                    {
+                        Console.Write("\nEnter Amount To Withdraw: ");
+                        string user_withdraw = Console.ReadLine();
+                        if (decimal.TryParse(user_withdraw, out decimal userWithdraw) && userWithdraw > 0)
+                        {
+                            if (accountBalances[withdraw] >= userWithdraw)
+                            {
+                                accountBalances[withdraw] -= userWithdraw;
+                                Console.WriteLine("\n");
+                                Console.Write(@"
+=======================================
+      -- WITHDRAWAL SUCCESSFUL --        
+=======================================");
+                                Console.WriteLine("\nYour new balance is: " + accountBalances[withdraw]); /*PROMPTS USER FOR SUCCESSFUL WITHDRAWAL*/
+                            }
+                            else
+                            {
+                                Console.WriteLine("\n");
+                                Console.Write(@"
+=======================================
+      -- WITHDRAWAL UNSUCCESSFUL --        
+=======================================");
+                                Console.WriteLine("\nERROR! Insufficient funds."); /*AN IF/ELSE STATEMENT CHECKS THE BALANCE OF AN ACCOUNT REGISTERED INSIDE THE ARRAY - IF THE WITHDRAWAL AMOUNT IS LARGER THAN THE BALANCE IT WILL PROMPT AN ERROR*/
+                            }
+                        }
+                        else
+                        {
+                            Console.WriteLine("\n");
+                            Console.Write(@"
+=======================================
+      -- WITHDRAWAL UNSUCCESSFUL --        
+=======================================");
+                            Console.WriteLine("\nERROR! Invalid withdrawal amount."); /*PROMPTS USER FOR INVALID AMOUNT - NON NUMERIC*/
+                        }
+                    }
+                    else
+                    {
+                        Console.WriteLine("\n");
+                        Console.Write(@"
+=======================================
+      -- WITHDRAWAL UNSUCCESSFUL --        
+=======================================");
+                        Console.WriteLine("\nERROR! Account not found."); /*A IF/ELSE STATEMENT CHECKS TO SEE IF YOUR ACCOUNT IS STORED INSIDE THE ARRAY, IT FALSE - THIS WILL SHOW*/
+                    }
+                    goto menuTab;
+
+                case 4: /*SELECTION 4*/
+                    Console.WriteLine("\n");
+                    Console.Write(@"
+=======================================
+         -- CHECK BALANCE --    
+=======================================");
+                    Console.Write("\nEnter Your Account Number: ");
+                    string accn3 = Console.ReadLine();
+                    if (long.TryParse(accn3, out long acc_number3))
+                    {
+                        int balance = -1;
+                        for (int i = 0; i < accountCount; i++)
+                        {
+                            if (accountNumbers[i] == acc_number3)
+                            {
+                                balance = i;
+                                break;
+                            }
+                        }
+
+                        if (balance != -1)
+                        {
+                            Console.WriteLine("\n");
+                            Console.Write(@"
+=======================================
+         -- ACCOUNT BALANCE --    
+=======================================");
+                            Console.WriteLine("\nYour current balance is: " + accountBalances[balance]); /*IF THE ACCOUNT HAS BEEN IDENTIFIED FROM THE ARRAY - THIS WILL SHOW*/
+                        }
+                        else
+                        {
+                            Console.WriteLine("\n");
+                            Console.Write(@"
+=======================================
+        -- ACCOUNT NOT FOUND --    
+=======================================");
+                            Console.WriteLine("\nERROR! Account not found."); /*OTHERWISE FALSE*/
+                        }
+                    }
+                    else
+                    {
+                        Console.WriteLine("\n");
+                        Console.Write(@"
+=======================================
+          -- INVALID INPUT --    
+=======================================");
+                        Console.WriteLine("\nERROR! Invalid account number format."); /*NON NUMERIC FORMAT OR INCLUDE SPACING*/
+                    }
+                    goto menuTab;
+
+                case 5: /*SELECTION 5*/
+                    Console.WriteLine("\n");
+                    Console.Write(@"
+=======================================
+            -- THANK YOU --    
+=======================================");
+                    Console.WriteLine("\nExiting...."); /*WHEN USER INPUTS #5 - THE LOOP STOPS*/
+                    break;
+                default: /*THIS IS SHOWN ONLY WHEN THE USER INPUTS A NUMBER THAT IS NOT AMONG THE SELECTION CONTROL MECHANISM*/
+                    Console.WriteLine("\n");
+                    Console.Write(@"
+=======================================
+          -- INVALID INPUT --    
+=======================================");
+                    Console.WriteLine("\nInvalid choice! Try again.");
+                    goto menuTab;
+            }
+        }
+    }
+}
