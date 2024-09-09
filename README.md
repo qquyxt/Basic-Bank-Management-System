@@ -36,7 +36,7 @@ _Check Balance:_
     𖹭 Ensures valid account numbers and positive values for deposits and withdrawals.
     Prevents withdrawals from accounts with insufficient funds.
     
-**How to Use**
+**How to Use:**
 
     𖹭 Clone the repository to your local machine.
     
@@ -48,7 +48,7 @@ _Check Balance:_
     
     𖹭 Exit the system when finished.
 
-**Notes**
+**Notes:**
 
     𖹭 The system is designed to handle only up to 5 accounts.
     
