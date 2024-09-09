@@ -1,10 +1,11 @@
-###𝐁𝐚𝐬𝐢𝐜 𝐁𝐚𝐧𝐤 𝐌𝐚𝐧𝐚𝐠𝐞𝐦𝐞𝐧𝐭 𝐒𝐲𝐬𝐭𝐞𝐦
-**𝙳𝚎𝚜𝚌𝚛𝚒𝚙𝚝𝚒𝚘𝚗**
+**Basic Bank Management System**
+
+**Description**
     𖹭 This is a simple console-based Bank Management System implemented in C# that allows users to manage up to 5 bank accounts. 
     The program stores account numbers and balances in two separate arrays and offers functionalities for creating accounts, depositing, withdrawing, and checking account balances. 
     Users can perform multiple operations using a loop-based menu until they choose to exit.
 
-**𝙵𝚎𝚊𝚝𝚞𝚛𝚎𝚜**
+**Features**
 _Create an Account:_
     𖹭 Users can create up to 5 bank accounts with an initial balance of 0.
     Each account is assigned a unique account number.
